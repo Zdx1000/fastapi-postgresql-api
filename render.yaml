@@ -4,10 +4,10 @@ services:
   name: fastapi-postgresql-api
   runtime: python
   repo: https://github.com/Zdx1000/fastapi-postgresql-api
-  branch: master
+  branch: main
   plan: free
   region: oregon
   buildCommand: pip install -r requirements.txt
-  startCommand: gunicorn Procfile.wsgi
+  startCommand: uvicorn servidor:app --host 0.0.0.0 --port $PORT
   autoDeployTrigger: commit
 version: "1"
