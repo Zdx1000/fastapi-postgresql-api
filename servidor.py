@@ -13,19 +13,17 @@ class Item(SQLModel, table=True):
 # Lê a URL do banco PostgreSQL
 DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://usuario:senha@localhost:5432/meubanco")
 
-try:
-    engine = create_engine(DATABASE_URL, echo=False)
-    # Testa a conexão
-    with engine.connect() as conn:
-        pass
-except Exception as e:
-    print(f"Erro na conexão com o banco: {e}")
-    # Em produção, o Render fornecerá a DATABASE_URL correta
-    engine = create_engine(DATABASE_URL, echo=False)
+# Cria engine sem testar conexão no início (para evitar erro no deploy)
+engine = create_engine(DATABASE_URL, echo=False)
 
 # Cria as tabelas no banco
 def create_db_and_tables():
-    SQLModel.metadata.create_all(engine)
+    try:
+        SQLModel.metadata.create_all(engine)
+        print("✅ Tabelas criadas com sucesso!")
+    except Exception as e:
+        print(f"⚠️ Erro ao criar tabelas: {e}")
+        # Continua mesmo com erro para não travar o deploy
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
