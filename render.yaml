@@ -1,10 +1,13 @@
-version: 1
+# Exported from Render on 2025-07-25T21:48:19Z
 services:
-  - type: web
-    name: fastapi-app
-    env: python
-    buildCommand: pip install -r requirements.txt
-    startCommand: uvicorn servidor:app --host 0.0.0.0 --port $PORT
-    envVars:
-      - key: PYTHON_VERSION
-        value: 3.11.0
+- type: web
+  name: fastapi-postgresql-api
+  runtime: python
+  repo: https://github.com/Zdx1000/fastapi-postgresql-api
+  branch: master
+  plan: free
+  region: oregon
+  buildCommand: pip install -r requirements.txt
+  startCommand: gunicorn Procfile.wsgi
+  autoDeployTrigger: commit
+version: "1"
